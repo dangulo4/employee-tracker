@@ -1,0 +1,22 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "Employee Tracker",
+  "main": "employee_db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dangulo4/employee-tracker.git"
+  },
+  "author": "Daniel Angulo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dangulo4/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/dangulo4/employee-tracker#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

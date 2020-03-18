@@ -23,13 +23,6 @@ primary key(id),
 foreign key(department_id) references department(id)
 );
 
-/* Create manager table */
-CREATE table manager(
-id int auto_increment,
-employee_id int,
-primary key(id)
-);
-
 /* Create employee table */
 CREATE table employee(
 id int not null auto_increment,
@@ -38,6 +31,5 @@ last_name varchar(30),
 role_id int,
 manager_id int,
 primary key(id),
-foreign key(role_id) references role(id),
-foreign key(manager_id) references manager(id)
+foreign key(role_id) references role(id)
 );

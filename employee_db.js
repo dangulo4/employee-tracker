@@ -36,6 +36,7 @@ function runSearch() {
       'View All Employees',
       'View Employees By Department',
       'View Employees By Roles',
+      'Add Department',
       'Quit'
       ]
   })
@@ -52,6 +53,11 @@ function runSearch() {
     case 'View Employees By Roles':
     vByRoles();
     break;
+
+    case 'Add Department':
+    addDept();
+    break;
+
 
     case 'Quit':
       connection.end();
@@ -97,4 +103,38 @@ function vByRoles() {
         runSearch();
     });
 }
-    
+
+function addDept() {
+    inquirer
+    .prompt([
+        {
+            name: 'department',
+            type: 'input',
+            message: 'What is the new department name?'
+        }
+    ])
+    .then(function(answer) {
+        connection.query(
+            'INSERT INTO department SET ?',
+            {
+                name: answer.department
+            },
+            function(err) {
+                if (err) throw err;
+                console.log('The new department has been added')
+                ;
+                vAllDept();
+                // runSearch();
+            }
+        );
+    });
+  }
+
+  function vAllDept() {
+    var query = 'SELECT * FROM department';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+            console.table(res);
+            runSearch();
+    });
+}

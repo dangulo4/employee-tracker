@@ -36,7 +36,8 @@ function runSearch() {
       'View All Employees',
       'View Employees By Department',
       'View Employees By Roles',
-      'Add Department',
+      'Add New Department',
+      'Add New Role',
       'Quit'
       ]
   })
@@ -54,10 +55,13 @@ function runSearch() {
     vByRoles();
     break;
 
-    case 'Add Department':
+    case 'Add New Department':
     addDept();
     break;
-
+    
+    case 'Add New Role':
+    addRole();
+    break;
 
     case 'Quit':
       connection.end();
@@ -121,17 +125,75 @@ function addDept() {
             },
             function(err) {
                 if (err) throw err;
-                console.log('The new department has been added')
-                ;
+                console.log('The new department has been added');
+                console.log('==================================');
                 vAllDept();
-                // runSearch();
             }
         );
     });
-  }
+}
 
-  function vAllDept() {
+function vAllDept() {
     var query = 'SELECT * FROM department';
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+            console.table(res);
+            runSearch();
+    });
+}
+
+function addRole() {
+    inquirer
+    .prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'What is the new role title?'
+        },
+        {
+            name: 'salary',
+            type: 'input',
+            message: 'What is the salary for the new role?',
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: 'departmentId',
+            type: 'input',
+            message: 'What is the Department Id?',
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    ])
+    .then(function(answer) {
+        connection.query(
+            'INSERT INTO role SET ?',
+            {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.departmentId
+            },
+            function(err) {
+                if (err) throw err;
+                console.log('The new role Title has been added');
+                console.log('============================================');
+                ;
+                vAllRoles();
+            }
+        );
+    });
+}
+
+function vAllRoles() {
+    var query = 'SELECT * FROM role';
     connection.query(query, function(err, res) {
         if (err) throw err;
             console.table(res);

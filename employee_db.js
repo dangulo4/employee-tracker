@@ -36,6 +36,7 @@ function runSearch() {
       'View All Employees',
       'View Employees By Department',
       'View Employees By Roles',
+      'Add New Employee',
       'Add New Department',
       'Add New Role',
       'Quit'
@@ -53,6 +54,10 @@ function runSearch() {
 
     case 'View Employees By Roles':
     vByRoles();
+    break;
+
+    case 'Add New Employee':
+    addEmp();
     break;
 
     case 'Add New Department':
@@ -183,8 +188,8 @@ function addRole() {
             },
             function(err) {
                 if (err) throw err;
-                console.log('The new role Title has been added');
-                console.log('============================================');
+                console.log('The new role has been added');
+                console.log('===================================================');
                 ;
                 vAllRoles();
             }
@@ -200,3 +205,62 @@ function vAllRoles() {
             runSearch();
     });
 }
+
+function addEmp() {
+    inquirer
+    .prompt([
+        {
+            name: 'firstName',
+            type: 'input',
+            message: 'Enter first name'
+        },
+        {
+            name: 'lastName',
+            type: 'input',
+            message: 'Enter last name'
+        },
+        {
+            name: 'roleId',
+            type: 'input',
+            message: 'Enter the role Id',
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: 'managerId',
+            type: 'input',
+            message: 'Enter the manager Id',
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    ])
+    .then(function(answer) {
+        connection.query(
+            'INSERT INTO employee SET ?',
+            {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: answer.roleId,
+                manager_id: answer.managerId
+            },
+            function(err) {
+                if (err) throw err;
+                console.log('The new Employee has been added');
+                console.log('============================================');
+                ;
+                vAllEmployees();
+            }
+        );
+    });
+}
+
+
+

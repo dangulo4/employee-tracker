@@ -7,7 +7,7 @@
 
 - The application will create an application that makes interfaces easy for non-developers to view and interact with information stored in databases. Often these interfaces are known as **C**ontent **M**anagement **S**ystems. In this homework assignment, your challenge is to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.:
 
-![Questions](/Develop/image/myteam.gif)]
+![Questions](/assets/images/employeeTracker.gif)]
 
 ## Table of Contents
 

@@ -34,18 +34,23 @@ function runSearch() {
     message: 'What would you like to do?',
     choices: [
       'View All Employees',
-      'View Employee By Department',
+      'View Employees By Department',
+      'View Employees By Roles',
       'Quit'
       ]
   })
   .then(function(answer) {
     switch (answer.choice) {
     case 'View All Employees':
-        viewAllEmployees();
+        vAllEmployees();
         break;
     
-    case 'View Employee By Department':
-    viewByDepartment();
+    case 'View Employees By Department':
+    vByDepartment();
+    break;
+
+    case 'View Employees By Roles':
+    vByRoles();
     break;
 
     case 'Quit':
@@ -55,7 +60,7 @@ function runSearch() {
   });
 }
 
-function viewAllEmployees() {
+function vAllEmployees() {
     var query = 'SELECT * FROM employee';
     connection.query(query, function(err, res) {
         if (err) throw err;
@@ -64,12 +69,26 @@ function viewAllEmployees() {
     });
 }
 
-function viewByDepartment() {
-    var query = 'SELECT department.name AS Department_Name, role.title AS Title, employee.id AS EmployeeID, employee.first_name AS First_Name, employee.last_name AS Last_Name FROM employee '
+function vByDepartment() {
+    var query = 'SELECT department.name AS Department_Name, employee.id AS EmployeeID, employee.first_name AS First_Name, employee.last_name AS Last_Name FROM employee '
         query += 'LEFT JOIN role ON employee.role_id = role.id ' 
         query += 'LEFT JOIN department ON role.department_id = department.id '
         query += 'GROUP BY EmployeeID ' 
         query += 'ORDER BY Department_Name'; 
+        // query += 'INNER JOIN department ON (role.department_id = department.id)';
+        // query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year, top_albums.position";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        runSearch();
+    });
+}
+
+function vByRoles() {
+    var query = 'SELECT role.title AS Title, employee.id AS EmployeeID, employee.first_name AS First_Name, employee.last_name AS Last_Name '
+        query += 'FROM employee LEFT JOIN role ON employee.role_id = role.id ' 
+        query += 'GROUP BY EmployeeID ' 
+        query += 'ORDER BY Title'; 
         // query += 'INNER JOIN department ON (role.department_id = department.id)';
         // query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year, top_albums.position";
     connection.query(query, function(err, res) {

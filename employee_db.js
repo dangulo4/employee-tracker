@@ -36,12 +36,13 @@ function runSearch() {
         'View All Employees',
         'View All Departments',
         'View All Roles',
+        'Search Employee By Last Name',
+        'Update Employee Role',
         'View Employees By Department',
         'View Employees By Roles',
         'Add New Employee',
         'Add New Department',
         'Add New Role',
-        'Search Employee By Last Name',
         'Quit'
       ]
     })
@@ -83,6 +84,10 @@ function runSearch() {
           searchEmpByLn();
           break;
 
+        case 'Update Employee Role':
+          updateEmpRole();
+          break;
+
         case 'Quit':
           connection.end();
           break;
@@ -117,12 +122,10 @@ function vByDepartment() {
 
 function vByRoles() {
   var query =
-    'SELECT role.title AS Title, employee.id AS EmployeeID, employee.first_name AS First_Name, employee.last_name AS Last_Name ';
+    'SELECT role.title AS Title, employee.role_id AS RoleID, employee.first_name AS First_Name, employee.last_name AS Last_Name, employee.id AS EmployeeID ';
   query += 'FROM employee LEFT JOIN role ON employee.role_id = role.id ';
   query += 'GROUP BY EmployeeID ';
   query += 'ORDER BY Title';
-  // query += 'INNER JOIN department ON (role.department_id = department.id)';
-  // query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year, top_albums.position";
   connection.query(query, function(err, res) {
     if (err) throw err;
     console.table(res);
@@ -295,5 +298,33 @@ function searchEmpByLn() {
         }
         runSearch();
       });
+    });
+}
+
+function updateEmpRole() {
+  inquirer
+    .prompt([
+      {
+        name: 'employee',
+        type: 'input',
+        message: 'Enter Employee Last Name'
+      },
+      {
+        name: 'role',
+        type: 'input',
+        message: 'Enter new Employee RoleID'
+      }
+    ])
+    .then(function(answer) {
+      var query = ' UPDATE employee SET ? WHERE ? ';
+      connection.query(
+        query,
+        [{ role_id: answer.role }, { last_name: answer.employee }],
+        function(err, res) {
+          if (err) throw err;
+          console.table(res.affectedRows + ' role Id updated\n');
+          vByRoles();
+        }
+      );
     });
 }

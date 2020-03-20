@@ -41,6 +41,7 @@ function runSearch() {
         'Add New Employee',
         'Add New Department',
         'Add New Role',
+        'Search Employee By Last Name',
         'Quit'
       ]
     })
@@ -76,6 +77,10 @@ function runSearch() {
 
         case 'Add New Role':
           addRole();
+          break;
+
+        case 'Search Employee By Last Name':
+          searchEmpByLn();
           break;
 
         case 'Quit':
@@ -269,5 +274,26 @@ function addEmp() {
           vAllEmployees();
         }
       );
+    });
+}
+
+function searchEmpByLn() {
+  inquirer
+    .prompt({
+      name: 'employee',
+      type: 'input',
+      message: 'Enter the Employee Last Name'
+    })
+    .then(function(answer) {
+      var query = 'SELECT first_name, last_name, id FROM employee WHERE ?';
+      connection.query(query, { last_name: answer.employee }, function(
+        err,
+        res
+      ) {
+        for (var i = 0; i < res.length; i++) {
+          console.table(res);
+        }
+        runSearch();
+      });
     });
 }
